@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitnessBuddy - Gym Finder</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Find Nearby Gyms</h1>
+
+    <form id="gym-search-form">
+      <div>
+        <label for="location">Enter City or Postal Code:</label>
+        <input type="text" id="location" placeholder="e.g., New York or 10001" required>
+      </div>
+      <button type="submit">Search</button>
+    </form>
+
+    <section id="gym-results">
+      <h2>Results</h2>
+      <ul id="gym-list">
+        <!-- Nearby gyms -->
+      </ul>
+    </section>
+  </div>
+
+  <script src="js/gymFinder.js"></script>
+</body>
+</html>
