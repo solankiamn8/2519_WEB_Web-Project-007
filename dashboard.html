@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitnessBuddy - Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Welcome, <span id="user-name">User</span></h1>
+      <button id="logout-btn">Logout</button>
+    </header>
+
+    <section id="profile-info">
+      <h2>Your Profile</h2>
+      <p>Height: <span id="height"></span></p>
+      <p>Weight: <span id="weight"></span></p>
+      <p>Target BMI: <span id="target-bmi"></span></p>
+    </section>
+
+    <section id="workout-log">
+      <h2>Your Workout Log</h2>
+      <form id="workout-form">
+        <div>
+          <label for="workout-type">Workout Type:</label>
+          <input type="text" id="workout-type" placeholder="e.g., Running">
+        </div>
+        <div>
+          <label for="duration">Duration (minutes):</label>
+          <input type="number" id="duration" placeholder="e.g., 30">
+        </div>
+        <div>
+          <label for="calories">Calories Burned:</label>
+          <input type="number" id="calories" placeholder="e.g., 300">
+        </div>
+        <button type="submit">Log Workout</button>
+      </form>
+    </section>
+
+    <section id="progress">
+      <h2>Your Progress</h2>
+      <p>BMI: <span id="current-bmi"></span></p>
+      <p>Weight Loss Progress: <span id="weight-loss-progress"></span></p>
+    </section>
+  </div>
+
+  <script src="js/workout.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
