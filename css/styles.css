@@ -122,6 +122,19 @@ footer .social-links a:hover {
   color: #00b4d8;
 }
 
+#chat-box {
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+#chat-form input {
+  width: 70%;
+  padding: 5px;
+}
+#chat-form button {
+  padding: 6px 10px;
+}
+
+
 /* Form and Button Styles */
 form {
   background-color: rgba(255, 255, 255, 0.8);
@@ -268,4 +281,87 @@ form p a:hover {
   form {
     padding: 20px;
   }
+}
+
+/* Add to the end of your existing styles.css */
+/* Dark Mode Styles */
+body.dark-mode {
+  background: #121212;
+  color: #ffffff;
+}
+
+body.dark-mode .container {
+  background: #1e1e1e;
+  color: #ffffff;
+}
+
+body.dark-mode form {
+  background: #2d2d2d;
+  color: #ffffff;
+}
+
+body.dark-mode form input,
+body.dark-mode form textarea {
+  background: #3d3d3d;
+  color: #ffffff;
+  border-color: #555;
+}
+
+/* Theme switch */
+.theme-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #00b4d8;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

@@ -7,55 +7,82 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <!-- Include Header -->
   <div id="header-placeholder"></div>
 
   <div class="container">
-    <h1>Edit Your Profile</h1>
+    <h1>Your Profile</h1>
+    
     <form id="profile-form">
       <div>
-        <label for="name">Name:</label>
-        <input type="text" id="name" placeholder="Enter your name" required>
-      </div>
-      <div>
         <label for="height">Height (cm):</label>
-        <input type="number" id="height" placeholder="Enter your height" required>
+        <input type="number" id="height" required>
       </div>
       <div>
         <label for="weight">Weight (kg):</label>
-        <input type="number" id="weight" placeholder="Enter your weight" required>
+        <input type="number" id="weight" required>
       </div>
       <div>
-        <label for="goal">Fitness Goal:</label>
-        <input type="text" id="goal" placeholder="Enter your fitness goal" required>
+        <label for="targetBMI">Target BMI:</label>
+        <input type="number" step="0.1" id="targetBMI" required>
       </div>
-      <button type="submit">Save Profile</button>
+      <div>
+        <label for="location">Location:</label>
+        <input type="text" id="location" required>
+      </div>
+      <div>
+        <label for="goals">Fitness Goals:</label>
+        <textarea id="goals" rows="3"></textarea>
+      </div>
+      <button type="submit">Update Profile</button>
     </form>
   </div>
 
-  <!-- Include Footer -->
   <div id="footer-placeholder"></div>
 
-  <script src="js/profile.js"></script>
-  <script src="js/auth.js"></script>
+  <script type="module">
+    import { auth, db, getCurrentUser, getUserData, updateUserData } from './js/auth.js';
+    
+    async function loadHTML(file, elementId) {
+      const res = await fetch(file);
+      const html = await res.text();
+      document.getElementById(elementId).innerHTML = html;
+    }
 
-  <!-- Load Header and Footer dynamically -->
-  <script>
-    // Load Header
-    fetch('header.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('header-placeholder').innerHTML = data;
-      })
-      .catch(error => console.error('Error loading header:', error));
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadHTML('header.html', 'header-placeholder');
+      await loadHTML('footer.html', 'footer-placeholder');
+      
+      const user = getCurrentUser();
+      if (!user) {
+        // window.location.href = 'login.html';
+        // return;
+      }
 
-    // Load Footer
-    fetch('footer.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('footer-placeholder').innerHTML = data;
-      })
-      .catch(error => console.error('Error loading footer:', error));
+      const userData = await getUserData(user.uid);
+      populateForm(userData);
+
+      document.getElementById('profile-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const updatedData = {
+          height: document.getElementById('height').value,
+          weight: document.getElementById('weight').value,
+          targetBMI: document.getElementById('targetBMI').value,
+          location: document.getElementById('location').value,
+          goals: document.getElementById('goals').value
+        };
+        
+        await updateUserData(user.uid, updatedData);
+        alert('Profile updated successfully!');
+      });
+    });
+
+    function populateForm(userData) {
+      document.getElementById('height').value = userData.height || '';
+      document.getElementById('weight').value = userData.weight || '';
+      document.getElementById('targetBMI').value = userData.targetBMI || '';
+      document.getElementById('location').value = userData.location || '';
+      document.getElementById('goals').value = userData.goals || '';
+    }
   </script>
 </body>
 </html>

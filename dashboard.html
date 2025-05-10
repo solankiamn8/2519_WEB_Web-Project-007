@@ -7,80 +7,151 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Header will be loaded here by JavaScript -->
-    <div id="header-placeholder"></div>
+  <div id="header-placeholder"></div>
 
-    <!-- Profile Section -->
+  <div class="container">
+    <!-- Profile Info -->
     <section id="profile-info">
       <h2>Your Profile</h2>
       <div class="profile-details">
-        <p>Height: <span id="height"></span></p>
-        <p>Weight: <span id="weight"></span></p>
-        <p>Target BMI: <span id="target-bmi"></span></p>
+        <p>Height: <span id="height-display"></span> cm</p>
+        <p>Weight: <span id="weight-display"></span> kg</p>
+        <p>Target BMI: <span id="target-bmi-display"></span></p>
       </div>
     </section>
 
-    <!-- Workout Log Section -->
+    <!-- BMI Progress -->
+    <section id="bmi-info">
+      <h2>BMI Progress</h2>
+      <div class="bmi-details">
+        <p>Current BMI: <span id="current-bmi"></span></p>
+        <p>Days to Target: <span id="days-to-target"></span></p>
+        <div class="progress-bar">
+          <div id="bmi-progress"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Log Workout -->
     <section id="workout-log">
-      <h2>Your Workout Log</h2>
+      <h2>Log Workout</h2>
       <form id="workout-form">
         <div>
-          <label for="workout-type">Workout Type:</label>
-          <input type="text" id="workout-type" placeholder="e.g., Running" required>
+          <label for="workout-type">Type:</label>
+          <select id="workout-type" required>
+            <option value="Running">Running</option>
+            <option value="Cycling">Cycling</option>
+            <option value="Weight Training">Weight Training</option>
+            <option value="Yoga">Yoga</option>
+          </select>
         </div>
         <div>
-          <label for="duration">Duration (minutes):</label>
-          <input type="number" id="duration" placeholder="e.g., 30" required>
+          <label for="duration">Duration (min):</label>
+          <input type="number" id="duration" required>
         </div>
         <div>
-          <label for="calories">Calories Burned:</label>
-          <input type="number" id="calories" placeholder="e.g., 300" required>
+          <label for="calories">Calories:</label>
+          <input type="number" id="calories" required>
         </div>
         <button type="submit">Log Workout</button>
       </form>
     </section>
 
-    <!-- Progress Section -->
-    <section id="progress">
-      <h2>Your Progress</h2>
-      <div class="progress-details">
-        <p>BMI: <span id="current-bmi"></span></p>
-        <p>Weight Loss Progress: <span id="weight-loss-progress"></span></p>
-      </div>
+    <!-- Recent Workouts -->
+    <section id="recent-workouts">
+      <h2>Recent Workouts</h2>
+      <ul id="workouts-list"></ul>
     </section>
-
-    <!-- Footer will be loaded here by JavaScript -->
-    <div id="footer-placeholder"></div>
   </div>
 
-  <script src="js/workout.js"></script>
-  <script src="js/auth.js"></script>
+  <!-- Buddy Matches -->
+<section id="buddy-matches">
+  <h2>Matched Buddies</h2>
+  <ul id="matches-list"></ul>
+</section>
 
-  <!-- JavaScript to load header and footer -->
-  <script>
-    import { updateNavbar, checkAuthorization, handleLogout } from './js/auth.js';
+  <!-- Chat -->
+  <section id="chat-section" style="display:none;">
+    <h2>Chat with <span id="chat-user-name"></span></h2>
+    <div id="chat-box" style="max-height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px;"></div>
+    <form id="chat-form">
+      <input type="text" id="chat-input" placeholder="Type a message..." required />
+      <button type="submit">Send</button>
+    </form>
+  </section>
 
-    // Update the navbar visibility based on user auth state
-    updateNavbar();
+  <script type="module" src="./js/chat.js"></script>
 
-    // Check if user is authorized (for restricted pages like dashboard, profile, etc.)
-    checkAuthorization();
 
-    // Handle logout button click event
-    handleLogout();
-    
-    // Load header
-    fetch('header.html')
-      .then(response => response.text())
-      .then(data => document.getElementById('header-placeholder').innerHTML = data)
-      .catch(error => console.log('Error loading header:', error));
+  <div id="footer-placeholder"></div>
 
-    // Load footer
-    fetch('footer.html')
-      .then(response => response.text())
-      .then(data => document.getElementById('footer-placeholder').innerHTML = data)
-      .catch(error => console.log('Error loading footer:', error));
+  <!-- Scripts -->
+  <script type="module">
+    import { auth, getUserData, logOut } from './js/auth.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js';
+
+    async function loadHTML(file, elementId) {
+      try {
+        const res = await fetch(file);
+        const html = await res.text();
+        document.getElementById(elementId).innerHTML = html;
+
+        if (elementId === 'header-placeholder') {
+          const logoutBtn = document.getElementById('logout-button');
+          if (logoutBtn) {
+            logoutBtn.addEventListener('click', async () => {
+              await logOut();
+              window.location.href = 'login.html';
+            });
+          }
+        }
+      } catch (error) {
+        console.error(`Error loading ${file}:`, error);
+      }
+    }
+
+    const calculateBMI = (height, weight) => (weight / ((height / 100) ** 2)).toFixed(1);
+    const calculateCaloriesToTarget = (currentBMI, targetBMI, height) => {
+      const currentWeight = currentBMI * ((height / 100) ** 2);
+      const targetWeight = targetBMI * ((height / 100) ** 2);
+      return (currentWeight - targetWeight) * 7700;
+    };
+    const estimateDaysToTarget = (calories, dailyDeficit = 500) => Math.ceil(calories / dailyDeficit);
+
+    function displayUserData(userData) {
+      const { height, weight, targetBMI } = userData;
+      const currentBMI = calculateBMI(height, weight);
+      const calories = calculateCaloriesToTarget(currentBMI, targetBMI, height);
+      const days = estimateDaysToTarget(calories);
+
+      document.getElementById('height-display').textContent = height;
+      document.getElementById('weight-display').textContent = weight;
+      document.getElementById('target-bmi-display').textContent = targetBMI;
+      document.getElementById('current-bmi').textContent = currentBMI;
+      document.getElementById('days-to-target').textContent = days;
+    }
+
+    async function initDashboard() {
+      await loadHTML('header.html', 'header-placeholder');
+      await loadHTML('footer.html', 'footer-placeholder');
+
+      // Wait for Firebase auth state to initialize
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const userData = await getUserData(user.uid);
+        if (userData) {
+          displayUserData(userData);
+        } else {
+          console.warn("User data not found");
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initDashboard);
   </script>
 </body>
 </html>

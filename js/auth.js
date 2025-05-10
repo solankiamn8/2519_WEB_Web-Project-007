@@ -1,20 +1,20 @@
-// Import Firebase SDKs from CDN
+import { getFirestore, doc, setDoc, getDoc, updateDoc} from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-analytics.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  GoogleAuthProvider,
+  signInWithPopup
 } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
-// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAPbEu0S7_slJeXgXP3iK62RJQhUsndVDE",
   authDomain: "fitnessbuddy-ff511.firebaseapp.com",
+  databaseURL: "https://fitnessbuddy-ff511-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "fitnessbuddy-ff511",
-  storageBucket: "fitnessbuddy-ff511.appspot.com",
+  storageBucket: "fitnessbuddy-ff511.firebasestorage.app",
   messagingSenderId: "500152952736",
   appId: "1:500152952736:web:976c42c8bf37fb5097a6c5",
   measurementId: "G-NG82JCDB36"
@@ -22,54 +22,59 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // Auth functions
-const signUp = (email, password) => {
-  return createUserWithEmailAndPassword(auth, email, password);
+const signUp = async (email, password, userData) => {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
+
+  // Save additional user data to Firestore
+  await setDoc(doc(db, 'users/' + user.uid), {
+    email: email,
+    ...userData
+  });
+
+  return userCredential;
 };
 
-const login = (email, password) => {
-  return signInWithEmailAndPassword(auth, email, password);
+const login = async(email, password) => {
+  return await signInWithEmailAndPassword(auth, email, password);
+};
+
+const googleLogin = () => {
+  const provider = new GoogleAuthProvider();
+  return signInWithPopup(auth, provider);
 };
 
 const logOut = () => {
+  localStorage.removeItem('userId')
   return signOut(auth);
 };
 
-const updateNavbar = () => {
-  onAuthStateChanged(auth, (user) => {
-    const authLinks = document.querySelectorAll('.auth-links');
-    const loggedInLinks = document.querySelectorAll('.logged-in-links');
-    const logoutBtn = document.getElementById('logout-btn');
-
-    if (user) {
-      authLinks.forEach(link => link.style.display = 'none');
-      loggedInLinks.forEach(link => link.style.display = 'block');
-      if (logoutBtn) logoutBtn.style.display = 'inline-block';
-    } else {
-      authLinks.forEach(link => link.style.display = 'block');
-      loggedInLinks.forEach(link => link.style.display = 'none');
-      if (logoutBtn) logoutBtn.style.display = 'none';
-    }
-  });
+const getCurrentUser = () => {
+  return auth.currentUser;
 };
 
-const checkAuthorization = () => {
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      window.location.href = 'login.html';
-    }
-  });
+const getUserData = async (userId) => {
+  const userDoc = await getDoc(doc(db, 'users', userId));
+  return userDoc.exists() ? userDoc.data() : null;
 };
 
-const handleLogout = () => {
-  const logoutBtn = document.getElementById('logout-btn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', logOut);
-  }
+const updateUserData = async (userId, data) => {
+  await updateDoc(doc(db, 'users/' + userId), data);
 };
 
 // Export functions
-export { signUp, login, logOut, updateNavbar, checkAuthorization, handleLogout };
+export { 
+  auth,
+  db,
+  signUp, 
+  login, 
+  googleLogin,
+  logOut, 
+  getCurrentUser,
+  getUserData,
+  updateUserData
+};
