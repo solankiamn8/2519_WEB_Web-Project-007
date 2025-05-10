@@ -1,27 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FitnessBuddy - Login</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitnessBuddy - Your Fitness Companion</title>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Welcome to FitnessBuddy</h1>
-    <form id="login-form">
-      <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" placeholder="Enter your email" required>
+  <div id="header-placeholder"></div>
+
+  <main class="container">
+    <section class="intro">
+      <h1>Welcome to FitnessBuddy</h1>
+      <p>
+        FitnessBuddy is your all-in-one platform to stay motivated, track your fitness journey, and connect with like-minded individuals. Whether you're a beginner or a pro, we've got you covered.
+      </p>
+    </section>
+
+    <section class="features">
+      <h2>What You Can Do</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <img src="assets/icons/buddy.png" alt="Find Buddy Icon">
+          <h3>Find Your Fitness Buddy</h3>
+          <p>Connect with others who share your goals and work out together — virtually or in person!</p>
+        </div>
+        <div class="feature-card">
+          <img src="assets/icons/workout.png" alt="Workout Tracking Icon">
+          <h3>Track Workouts</h3>
+          <p>Log exercises, set goals, and monitor progress with our intuitive workout tracker.</p>
+        </div>
+        <div class="feature-card">
+          <img src="assets/icons/bmi.png" alt="BMI Icon">
+          <h3>Check Your BMI</h3>
+          <p>Instantly calculate your Body Mass Index and stay informed about your health.</p>
+        </div>
+        <div class="feature-card">
+          <img src="assets/icons/gym.png" alt="Gym Finder Icon">
+          <h3>Find Nearby Gyms</h3>
+          <p>Use our gym locator to find fitness centers around you quickly and easily.</p>
+        </div>
       </div>
-      <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" placeholder="Enter your password" required>
-      </div>
-      <button type="submit">Login</button>
-      <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-    </form>
-  </div>
-  <script src="js/auth.js"></script>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadHTML(file, elementId) {
+      fetch(file)
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById(elementId).innerHTML = data;
+        })
+        .catch(error => console.error('Error loading file:', error));
+    }
+
+    loadHTML('header.html', 'header-placeholder');
+    loadHTML('footer.html', 'footer-placeholder');
+  </script>
 </body>
 </html>

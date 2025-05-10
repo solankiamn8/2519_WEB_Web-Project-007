@@ -1,27 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FitnessBuddy - Sign Up</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body {
+      background: linear-gradient(to right, #00b4d8, #ffffff);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      font-size: 2.5em;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 800px;
+      margin-top: 80px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .container form div {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Dynamic header -->
+  <div id="header-placeholder"></div>
+
   <div class="container">
     <h1>Create an Account</h1>
     <form id="signup-form">
       <div>
         <label for="email">Email:</label>
-        <input type="email" id="email" placeholder="Enter your email" required>
+        <input type="email" id="email" placeholder="Enter your email" required />
       </div>
       <div>
         <label for="password">Password:</label>
-        <input type="password" id="password" placeholder="Enter your password" required>
+        <input type="password" id="password" placeholder="Enter your password" required />
+      </div>
+      <div>
+        <label for="height">Height (cm):</label>
+        <input type="number" id="height" placeholder="Enter your height" required />
+      </div>
+      <div>
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" placeholder="Enter your weight" required />
+      </div>
+      <div>
+        <label for="targetBMI">Target BMI:</label>
+        <input type="number" step="0.1" id="targetBMI" placeholder="Enter your target BMI" required />
       </div>
       <button type="submit">Sign Up</button>
-      <p>Already have an account? <a href="index.html">Login</a></p>
+      <p>Already have an account? <a href="login.html">Login</a></p>
     </form>
   </div>
-  <script src="js/auth.js"></script>
+
+  <!-- Dynamic footer -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Auth functionality and dynamic header/footer loading -->
+  <script type="module">
+    import { signUp } from './js/auth.js';
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-database.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
+  
+    // Firebase config — same as used in auth.js
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPbEu0S7_slJeXgXP3iK62RJQhUsndVDE",
+      authDomain: "fitnessbuddy-ff511.firebaseapp.com",
+      databaseURL: "https://fitnessbuddy-ff511-default-rtdb.asia-southeast1.firebasedatabase.app/",
+      projectId: "fitnessbuddy-ff511",
+      storageBucket: "fitnessbuddy-ff511.appspot.com",
+      messagingSenderId: "500152952736",
+      appId: "1:500152952736:web:976c42c8bf37fb5097a6c5",
+      measurementId: "G-NG82JCDB36"
+    };
+  
+    // Initialize app (safe to re-call in browser modules)
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+  
+    // Load header and footer
+    const loadHTML = async (file, elementId) => {
+      const res = await fetch(file);
+      const html = await res.text();
+      document.getElementById(elementId).innerHTML = html;
+    };
+  
+    loadHTML('header.html', 'header-placeholder');
+    loadHTML('footer.html', 'footer-placeholder');
+  
+    // Handle form submission
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const height = document.getElementById('height').value.trim();
+      const weight = document.getElementById('weight').value.trim();
+      const targetBMI = document.getElementById('targetBMI').value.trim();
+  
+      try {
+        const userCredential = await signUp(email, password);
+        const uid = userCredential.user.uid;
+  
+        const userData = {
+          email,
+          height,
+          weight,
+          targetBMI
+        };
+  
+        // Store data in Realtime Database
+        await set(ref(db, 'users/' + uid), userData);
+  
+        alert("Signup successful!");
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        alert("Signup failed: " + err.message);
+      }
+    });
+  </script>
+  
 </body>
 </html>

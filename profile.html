@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <!-- Include Header -->
+  <div id="header-placeholder"></div>
+
   <div class="container">
     <h1>Edit Your Profile</h1>
     <form id="profile-form">
@@ -30,7 +33,29 @@
     </form>
   </div>
 
+  <!-- Include Footer -->
+  <div id="footer-placeholder"></div>
+
   <script src="js/profile.js"></script>
   <script src="js/auth.js"></script>
+
+  <!-- Load Header and Footer dynamically -->
+  <script>
+    // Load Header
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header-placeholder').innerHTML = data;
+      })
+      .catch(error => console.error('Error loading header:', error));
+
+    // Load Footer
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('footer-placeholder').innerHTML = data;
+      })
+      .catch(error => console.error('Error loading footer:', error));
+  </script>
 </body>
 </html>

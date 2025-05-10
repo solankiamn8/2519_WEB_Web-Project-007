@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <!-- Include Header -->
+  <div id="header-placeholder"></div>
+
   <div class="container">
     <h1>Find Nearby Gyms</h1>
 
@@ -21,11 +24,34 @@
     <section id="gym-results">
       <h2>Results</h2>
       <ul id="gym-list">
-        <!-- Nearby gyms -->
+        <!-- Nearby gyms will be listed here -->
       </ul>
     </section>
   </div>
 
+  <!-- Include Footer -->
+  <div id="footer-placeholder"></div>
+
   <script src="js/gymFinder.js"></script>
+
+  <!-- Load Header and Footer dynamically -->
+  <script>
+    
+    // Load Header
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header-placeholder').innerHTML = data;
+      })
+      .catch(error => console.error('Error loading header:', error));
+
+    // Load Footer
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('footer-placeholder').innerHTML = data;
+      })
+      .catch(error => console.error('Error loading footer:', error));
+  </script>
 </body>
 </html>

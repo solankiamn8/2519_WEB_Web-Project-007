@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitnessBuddy - Login</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Page-Specific Styles */
+    body {
+      background: linear-gradient(to right, #00b4d8, #ffffff); /* Gradient background specific to login page */
+    }
+
+    .container {
+      max-width: 800px;
+      margin-top: 80px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      font-size: 2.5em;
+      font-weight: bold;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    form label {
+      font-size: 1.2em;
+      color: #333;
+    }
+
+    form input {
+      padding: 12px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+
+    form input:focus {
+      border-color: #00b4d8;
+    }
+
+    form button {
+      padding: 12px;
+      background-color: #00b4d8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    form button:hover {
+      background-color: #007BFF; /* Darker blue on hover */
+    }
+
+    form p {
+      text-align: center;
+      font-size: 1em;
+      color: #555;
+    }
+
+    form p a {
+      color: #00b4d8;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    form p a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <div class="container">
+    <h1>Welcome to FitnessBuddy</h1>
+    <form id="login-form">
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+      </div>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+      </div>
+      <button type="submit">Login</button>
+      <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+    </form>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    function loadHTML(file, elementId) {
+      fetch(file)
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById(elementId).innerHTML = data;
+        })
+        .catch(error => {
+          console.error('Error loading the HTML file:', error);
+        });
+    }
+
+    loadHTML('header.html', 'header-placeholder');
+    loadHTML('footer.html', 'footer-placeholder');
+  </script>
+</body>
+</html>

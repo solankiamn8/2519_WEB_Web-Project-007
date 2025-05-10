@@ -8,45 +8,79 @@
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1>Welcome, <span id="user-name">User</span></h1>
-      <button id="logout-btn">Logout</button>
-    </header>
+    <!-- Header will be loaded here by JavaScript -->
+    <div id="header-placeholder"></div>
 
+    <!-- Profile Section -->
     <section id="profile-info">
       <h2>Your Profile</h2>
-      <p>Height: <span id="height"></span></p>
-      <p>Weight: <span id="weight"></span></p>
-      <p>Target BMI: <span id="target-bmi"></span></p>
+      <div class="profile-details">
+        <p>Height: <span id="height"></span></p>
+        <p>Weight: <span id="weight"></span></p>
+        <p>Target BMI: <span id="target-bmi"></span></p>
+      </div>
     </section>
 
+    <!-- Workout Log Section -->
     <section id="workout-log">
       <h2>Your Workout Log</h2>
       <form id="workout-form">
         <div>
           <label for="workout-type">Workout Type:</label>
-          <input type="text" id="workout-type" placeholder="e.g., Running">
+          <input type="text" id="workout-type" placeholder="e.g., Running" required>
         </div>
         <div>
           <label for="duration">Duration (minutes):</label>
-          <input type="number" id="duration" placeholder="e.g., 30">
+          <input type="number" id="duration" placeholder="e.g., 30" required>
         </div>
         <div>
           <label for="calories">Calories Burned:</label>
-          <input type="number" id="calories" placeholder="e.g., 300">
+          <input type="number" id="calories" placeholder="e.g., 300" required>
         </div>
         <button type="submit">Log Workout</button>
       </form>
     </section>
 
+    <!-- Progress Section -->
     <section id="progress">
       <h2>Your Progress</h2>
-      <p>BMI: <span id="current-bmi"></span></p>
-      <p>Weight Loss Progress: <span id="weight-loss-progress"></span></p>
+      <div class="progress-details">
+        <p>BMI: <span id="current-bmi"></span></p>
+        <p>Weight Loss Progress: <span id="weight-loss-progress"></span></p>
+      </div>
     </section>
+
+    <!-- Footer will be loaded here by JavaScript -->
+    <div id="footer-placeholder"></div>
   </div>
 
   <script src="js/workout.js"></script>
   <script src="js/auth.js"></script>
+
+  <!-- JavaScript to load header and footer -->
+  <script>
+    import { updateNavbar, checkAuthorization, handleLogout } from './js/auth.js';
+
+    // Update the navbar visibility based on user auth state
+    updateNavbar();
+
+    // Check if user is authorized (for restricted pages like dashboard, profile, etc.)
+    checkAuthorization();
+
+    // Handle logout button click event
+    handleLogout();
+    
+    // Load header
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('header-placeholder').innerHTML = data)
+      .catch(error => console.log('Error loading header:', error));
+
+    // Load footer
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('footer-placeholder').innerHTML = data)
+      .catch(error => console.log('Error loading footer:', error));
+  </script>
 </body>
 </html>
