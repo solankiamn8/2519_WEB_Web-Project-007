@@ -4,7 +4,10 @@ import {
   getAuth, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
-  signOut 
+  signOut,
+  setPersistence, 
+  browserLocalPersistence,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -61,13 +64,35 @@ const login = async (email, password) => {
 
 const logOut = async () => {
   try {
-    localStorage.removeItem('userId');
+    // Set session persistence to none to clear the session data
+    await setPersistence(auth, browserLocalPersistence);
+
+    // Sign out the user
     await signOut(auth);
+
+    // Clear user data from localStorage
+    localStorage.removeItem('userId');
+
+    // Log success
+    console.log('User successfully logged out');
+
+    // Redirect the user to the homepage or login page
+    window.location.href = 'index.html'; // Adjust this based on your app structure
+
   } catch (error) {
     console.error("Error logging out: ", error);
-    throw new Error(error.message); // Or handle the error accordingly
+    throw new Error(error.message); // Handle the error accordingly
   }
 };
+
+// Listen for auth state changes to reflect changes immediately
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log('User is logged in:', user);
+  } else {
+    console.log('User is logged out');
+  }
+});
 
 const getCurrentUser = () => {
   return auth.currentUser;

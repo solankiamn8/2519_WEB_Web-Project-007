@@ -1,50 +1,266 @@
-<!-- community.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Community</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Community - Fitness Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Roboto:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="css/header.css" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f7fa;
+      color: #333;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      color: #444;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    /* Profile Section */
+    #user-profile {
+      margin-top: 30px;
+      background-color: #fafafa;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    #user-profile p {
+      margin-bottom: 10px;
+    }
+
+    /*Logout Button*/
+    /* Logout Button Style */
+    .logout-btn {
+        background-color: #f44336; /* Red color for logout button */
+        color: white;
+        border: none;
+        padding: 0.2rem 1rem;
+        cursor: pointer;
+        font-size: 1rem;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        margin: 0 10px;
+        vertical-align: middle;
+    }
+
+    .logout-btn:hover {
+        background-color: #d32f2f; /* Darker red on hover */
+        transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+
+    .logout-btn:focus {
+        outline: none; /* Remove focus outline for better styling */
+    }
+
+    .logout-btn:active {
+        background-color: #c62828; /* Even darker red when pressed */
+        transform: scale(1); /* Reset zoom when pressed */
+    }
+
+
+    /* Buddy Matches Section */
+    #buddy-matches {
+      margin-top: 30px;
+      background-color: #fafafa;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    #buddy-matches .match {
+      padding: 10px;
+      background-color: #f7f7f7;
+      margin: 10px 0;
+      border-radius: 5px;
+    }
+
+    #buddy-matches button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 5px;
+    }
+
+    #buddy-matches button:hover {
+      background-color: #45a049;
+    }
+
+    /* Chat Section */
+    #messages {
+      margin-top: 30px;
+      background-color: #fafafa;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    #message-container {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #f7f7f7;
+      border-radius: 5px;
+      max-height: 300px;
+      overflow-y: scroll;
+    }
+
+    #message-input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+    }
+
+    #send-message-btn {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    #send-message-btn:hover {
+      background-color: #45a049;
+    }
+
+    /* Workout Log Section */
+    #workout-log {
+      margin-top: 30px;
+      background-color: #fafafa;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    #workout-duration {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    #share-workout-btn {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    #share-workout-btn:hover {
+      background-color: #45a049;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
 
-  <header>
-    <h1>Community</h1>
-    <button onclick="logout()">Logout</button>
+  <header class="header header-small">
+    <a href="index.html" class="logo">
+      <img src="data:image/png;base64,..." alt="FitnessBuddy Logo">
+      <span class="logo-text">FitnessBuddy</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="javascript:void(0)" onclick="darkModeToggle()" id="dark-mode-toggle">
+          <i class="fas fa-sun" id="light-icon"></i>
+          <i class="fas fa-moon" id="dark-icon" style="display:none;"></i>
+        </a></li>
+        <li><button class="logout-btn" onclick="logout()">Logout</button></li>
+    </ul>
+    </nav>
   </header>
 
-  <section id="user-profile">
-    <h2>Your Profile</h2>
-    <div id="user-info">
-      <!-- User profile data will be displayed here -->
-    </div>
-  </section>
+  <div class="container">
+    <h1>Welcome to the Community</h1>
 
-  <section id="buddy-matches">
-    <h2>Suggested Buddies</h2>
-    <div id="matches-list">
-      <!-- Matched users will be listed here -->
-    </div>
-  </section>
+    <!-- User Profile Section -->
+    <section id="user-profile">
+      <h2>Your Details</h2>
+      <div id="user-info">
+        <!-- User info will be displayed here -->
+      </div>
+    </section>
 
-  <section id="messages">
-    <h2>Messages</h2>
-    <div id="message-container">
-      <!-- Chat messages will go here -->
-    </div>
-    <textarea id="message-input" placeholder="Type your message..." rows="4" cols="50"></textarea>
-    <button id="send-message-btn">Send Message</button>
-  </section>
+    <!-- Buddy Matches Section -->
+    <section id="buddy-matches">
+      <h2>Suggested Buddies</h2>
+      <div id="matches-list">
+        <!-- Matched users will be listed here -->
+      </div>
+    </section>
 
-  <section id="workout-log">
-    <h2>Share Your Workout</h2>
-    <input type="text" id="workout-duration" placeholder="Enter workout duration (in minutes)">
-    <button id="share-workout-btn">Share Workout</button>
-  </section>
+    <!-- Messages Section -->
+    <section id="messages">
+      <h2>Messages</h2>
+      <div id="message-container">
+        <!-- Chat messages will go here -->
+      </div>
+      <textarea id="message-input" placeholder="Type your message..." rows="4" cols="50"></textarea>
+      <button id="send-message-btn">Send Message</button>
+    </section>
+
+    <!-- Workout Log Section -->
+    <section id="workout-log">
+      <h2>Share Your Workout</h2>
+      <input type="text" id="workout-duration" placeholder="Enter workout duration (in minutes)">
+      <button id="share-workout-btn">Share Workout</button>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2025 Fitness Tracker, All Rights Reserved</p>
+  </footer>
 
   <script type="module">
-    import { getUserData, updateUserData, db, auth } from './auth.js';
+    import { getUserData, updateUserData, db, auth } from './js/auth.js';
     import { getDocs, collection, query, where, doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js';
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -74,6 +290,9 @@
       function displayUserProfile(userData) {
         userInfo.innerHTML = `
           <p><strong>Name:</strong> ${userData.firstName} ${userData.lastName}</p>
+          <p><strong>Username:</strong> ${userData.username}</p>
+          <p><strong>Age:</strong> ${userData.age}</p>
+          <p><strong>Gender:</strong> ${userData.gender}</p>
           <p><strong>Fitness Goal:</strong> ${userData.fitnessGoal}</p>
           <p><strong>Location:</strong> ${userData.city}, ${userData.country}</p>
           <p><strong>Email:</strong> ${userData.email}</p>
@@ -96,52 +315,61 @@
           const matchDiv = document.createElement('div');
           matchDiv.classList.add('match');
           matchDiv.innerHTML = `
-            <p><strong>${matchData.firstName} ${matchData.lastName}</strong> - Goal: ${matchData.fitnessGoal}</p>
-            <button onclick="startChat('${doc.id}')">Chat</button>
+            <p><strong>${matchData.firstName} ${matchData.lastName}</strong></p>
+            <p><em>${matchData.fitnessGoal}</em></p>
+            <button onclick="sendMessage('${doc.id}')">Send Message</button>
           `;
           matchesList.appendChild(matchDiv);
         });
       }
 
-      // Function to start a chat with the selected buddy
-      function startChat(buddyId) {
-        const buddyName = document.querySelector(`button[onclick="startChat('${buddyId}')"]`).parentElement.querySelector('strong').textContent;
-        messageContainer.innerHTML += `<p><strong>${buddyName}:</strong> Chat started!</p>`;
-        sendMessageBtn.onclick = () => sendMessage(buddyId);
-      }
-
-      // Send message to the selected buddy
-      function sendMessage(buddyId) {
-        const messageText = messageInput.value.trim();
-        if (messageText) {
-          // Here we just append the message to the chat container for now
-          messageContainer.innerHTML += `<p><strong>You:</strong> ${messageText}</p>`;
-          messageInput.value = ''; // Clear input after sending
-        }
-      }
-
-      // Share workout log
-      shareWorkoutBtn.addEventListener('click', async () => {
-        const workoutDuration = workoutDurationInput.value.trim();
-        if (workoutDuration) {
-          // Optionally, store the workout log in Firestore or share with matched users
-          alert(`You shared a workout of ${workoutDuration} minutes with your buddy!`);
-          // Save the workout log to Firestore (you can create a separate collection for logs)
-          await setDoc(doc(db, 'workouts', userId + '-' + new Date().toISOString()), {
-            userId: userId,
-            duration: workoutDuration,
-            date: new Date()
-          });
-        } else {
-          alert('Please enter workout duration!');
+      // Send a message
+      sendMessageBtn.addEventListener('click', async () => {
+        const message = messageInput.value.trim();
+        if (message) {
+          await sendChatMessage(message);
+          messageInput.value = ''; // Clear the input
         }
       });
 
+      async function sendChatMessage(message) {
+        // Add logic to save message to Firestore for chat functionality
+        console.log('Message sent:', message);
+      }
+
+      // Share workout
+      shareWorkoutBtn.addEventListener('click', async () => {
+        const workoutDuration = workoutDurationInput.value.trim();
+        if (workoutDuration) {
+          await shareWorkoutLog(workoutDuration);
+          workoutDurationInput.value = ''; // Clear the input
+        }
+      });
+
+      async function shareWorkoutLog(duration) {
+        const userRef = doc(db, 'users', userId);
+        await setDoc(userRef, {
+          lastWorkout: {
+            date: new Date().toISOString(),
+            duration: duration,
+          }
+        }, { merge: true });
+
+        console.log(`Workout of ${duration} minutes shared!`);
+      }
+
       // Logout function
-      window.logout = () => {
-        localStorage.removeItem('userId');
-        window.location.href = 'login.html';
-      };
+      function logout() {
+    logOut()  // Call the logOut function from auth.js
+        .then(() => {
+        localStorage.removeItem('userId');  // Ensure userId is removed from localStorage
+        window.location.href = 'index.html';  // Redirect to the home page after logging out
+        })
+        .catch((error) => {
+        console.error("Error during logout:", error);
+        });
+    }
+
     });
   </script>
 </body>
