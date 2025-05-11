@@ -1,0 +1,73 @@
+/* General Header Styles */
+.header {
+    background-color: #111;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    gap: 15px;
+  }
+  
+  .logo img {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .logo-text {
+    font-family: 'Oswald', sans-serif;
+    font-weight: bold;
+    font-size: 1.8rem;
+  }
+  
+  /* Header Styles for Large (index.html) */
+  .header-large {
+    padding: 1rem 2rem;
+  }
+  
+  .header-large .logo img {
+    height: 50px;
+    width: 50px;
+  }
+  
+  /* Header Styles for Small (signup.html, other pages) */
+  .header-small {
+    padding: 0.6rem 2rem;
+  }
+  
+  .header-small .logo img {
+    height: 40px;
+    width: 40px;
+  }
+  
+  .header .logo:hover {
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+  }
+  
+  .header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    font-size: 1.2rem;
+  }
+
+  .header-small nav ul {
+    font-size: 1rem;
+  }
+  
+  .header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .header nav ul li a:hover {
+    color: #ff6600;
+  }
+  

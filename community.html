@@ -1,0 +1,148 @@
+<!-- community.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1>Community</h1>
+    <button onclick="logout()">Logout</button>
+  </header>
+
+  <section id="user-profile">
+    <h2>Your Profile</h2>
+    <div id="user-info">
+      <!-- User profile data will be displayed here -->
+    </div>
+  </section>
+
+  <section id="buddy-matches">
+    <h2>Suggested Buddies</h2>
+    <div id="matches-list">
+      <!-- Matched users will be listed here -->
+    </div>
+  </section>
+
+  <section id="messages">
+    <h2>Messages</h2>
+    <div id="message-container">
+      <!-- Chat messages will go here -->
+    </div>
+    <textarea id="message-input" placeholder="Type your message..." rows="4" cols="50"></textarea>
+    <button id="send-message-btn">Send Message</button>
+  </section>
+
+  <section id="workout-log">
+    <h2>Share Your Workout</h2>
+    <input type="text" id="workout-duration" placeholder="Enter workout duration (in minutes)">
+    <button id="share-workout-btn">Share Workout</button>
+  </section>
+
+  <script type="module">
+    import { getUserData, updateUserData, db, auth } from './auth.js';
+    import { getDocs, collection, query, where, doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const userId = localStorage.getItem('userId');
+      const userInfo = document.getElementById('user-info');
+      const matchesList = document.getElementById('matches-list');
+      const messageContainer = document.getElementById('message-container');
+      const messageInput = document.getElementById('message-input');
+      const sendMessageBtn = document.getElementById('send-message-btn');
+      const shareWorkoutBtn = document.getElementById('share-workout-btn');
+      const workoutDurationInput = document.getElementById('workout-duration');
+
+      // Check if user is logged in
+      if (!userId) {
+        window.location.href = 'login.html'; // Redirect to login if no user
+        return;
+      }
+
+      // Fetch the current user's profile from Firestore
+      const userData = await getUserData(userId);
+      if (userData) {
+        displayUserProfile(userData);
+        await findMatches(userData); // Find buddies based on fitness goal and location
+      }
+
+      // Display user profile
+      function displayUserProfile(userData) {
+        userInfo.innerHTML = `
+          <p><strong>Name:</strong> ${userData.firstName} ${userData.lastName}</p>
+          <p><strong>Fitness Goal:</strong> ${userData.fitnessGoal}</p>
+          <p><strong>Location:</strong> ${userData.city}, ${userData.country}</p>
+          <p><strong>Email:</strong> ${userData.email}</p>
+        `;
+      }
+
+      // Fetch and display matched users based on city and fitness goal
+      async function findMatches(userData) {
+        const q = query(
+          collection(db, 'users'),
+          where('city', '==', userData.city),
+          where('fitnessGoal', '==', userData.fitnessGoal)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        matchesList.innerHTML = ''; // Clear the current matches
+        
+        querySnapshot.forEach(doc => {
+          const matchData = doc.data();
+          const matchDiv = document.createElement('div');
+          matchDiv.classList.add('match');
+          matchDiv.innerHTML = `
+            <p><strong>${matchData.firstName} ${matchData.lastName}</strong> - Goal: ${matchData.fitnessGoal}</p>
+            <button onclick="startChat('${doc.id}')">Chat</button>
+          `;
+          matchesList.appendChild(matchDiv);
+        });
+      }
+
+      // Function to start a chat with the selected buddy
+      function startChat(buddyId) {
+        const buddyName = document.querySelector(`button[onclick="startChat('${buddyId}')"]`).parentElement.querySelector('strong').textContent;
+        messageContainer.innerHTML += `<p><strong>${buddyName}:</strong> Chat started!</p>`;
+        sendMessageBtn.onclick = () => sendMessage(buddyId);
+      }
+
+      // Send message to the selected buddy
+      function sendMessage(buddyId) {
+        const messageText = messageInput.value.trim();
+        if (messageText) {
+          // Here we just append the message to the chat container for now
+          messageContainer.innerHTML += `<p><strong>You:</strong> ${messageText}</p>`;
+          messageInput.value = ''; // Clear input after sending
+        }
+      }
+
+      // Share workout log
+      shareWorkoutBtn.addEventListener('click', async () => {
+        const workoutDuration = workoutDurationInput.value.trim();
+        if (workoutDuration) {
+          // Optionally, store the workout log in Firestore or share with matched users
+          alert(`You shared a workout of ${workoutDuration} minutes with your buddy!`);
+          // Save the workout log to Firestore (you can create a separate collection for logs)
+          await setDoc(doc(db, 'workouts', userId + '-' + new Date().toISOString()), {
+            userId: userId,
+            duration: workoutDuration,
+            date: new Date()
+          });
+        } else {
+          alert('Please enter workout duration!');
+        }
+      });
+
+      // Logout function
+      window.logout = () => {
+        localStorage.removeItem('userId');
+        window.location.href = 'login.html';
+      };
+    });
+  </script>
+</body>
+</html>

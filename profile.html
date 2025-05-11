@@ -1,88 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FitnessBuddy - Profile</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile - FitnessBuddy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Roboto:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/header.css" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .profile-container {
+      max-width: 600px;
+      margin: 3rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-container form {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .profile-container input,
+    .profile-container select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .profile-container button {
+      padding: 0.75rem;
+      background-color: #ff6600;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .profile-container button:hover {
+      background-color: #e55b00;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <div id="header-placeholder"></div>
 
-  <div class="container">
-    <h1>Your Profile</h1>
-    
+  <header class="header header-small">
+    <a href="index.html" class="logo">
+    <img src="data:image/png;base64,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" alt="FitnessBuddy Logo">    </a>
+    <nav>
+      <ul>
+        <li><a href="logout.html">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="profile-container">
+    <h2>Complete Your Profile</h2>
     <form id="profile-form">
-      <div>
-        <label for="height">Height (cm):</label>
-        <input type="number" id="height" required>
+      <input type="text" id="firstName" name="firstName" placeholder="First Name" required />
+      <input type="text" id="lastName" name="lastName" placeholder="Last Name" required />
+      <input type="text" id="username" name="username" placeholder="Username (unique)" required />
+      <input type="number" id="age" name="age" placeholder="Age" min="1" required />
+      
+      <select id="gender" name="gender" required>
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+      
+      <input type="number" id="height" name="height" placeholder="Height (cm)" min="0" required />
+      <input type="number" id="weight" name="weight" placeholder="Weight (kg)" min="0" required />
+      <input type="number" id="targetBMI" name="targetBMI" placeholder="Target BMI" min="0" step="0.1" required />
+      
+      <select id="fitnessGoal" name="fitnessGoal" required>
+        <option value="">Select Fitness Goal</option>
+        <option value="Lose weight">Lose Weight</option>
+        <option value="Gain muscle">Gain Muscle</option>
+        <option value="Maintain">Maintain</option>
+        <option value="Powerlifting">Powerlifting</option>
+      </select>
+
+      <input type="text" id="country" name="country" placeholder="Country" required />
+      <input type="text" id="city" name="city" placeholder="City" required />
+      <input type="text" id="pinCode" name="pinCode" placeholder="Pin Code" required />
+
+      <div class="error" id="error-message"></div>
+
+      <div class="button-group">
+        <button type="submit" id="updateBtn">Update Profile</button>
+        <button type="button" id="editBtn" class="hidden">Edit</button>
       </div>
-      <div>
-        <label for="weight">Weight (kg):</label>
-        <input type="number" id="weight" required>
-      </div>
-      <div>
-        <label for="targetBMI">Target BMI:</label>
-        <input type="number" step="0.1" id="targetBMI" required>
-      </div>
-      <div>
-        <label for="location">Location:</label>
-        <input type="text" id="location" required>
-      </div>
-      <div>
-        <label for="goals">Fitness Goals:</label>
-        <textarea id="goals" rows="3"></textarea>
-      </div>
-      <button type="submit">Update Profile</button>
     </form>
   </div>
 
-  <div id="footer-placeholder"></div>
-
-  <script type="module">
-    import { auth, db, getCurrentUser, getUserData, updateUserData } from './js/auth.js';
-    
-    async function loadHTML(file, elementId) {
-      const res = await fetch(file);
-      const html = await res.text();
-      document.getElementById(elementId).innerHTML = html;
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      await loadHTML('header.html', 'header-placeholder');
-      await loadHTML('footer.html', 'footer-placeholder');
-      
-      const user = getCurrentUser();
-      if (!user) {
-        // window.location.href = 'login.html';
-        // return;
-      }
-
-      const userData = await getUserData(user.uid);
-      populateForm(userData);
-
-      document.getElementById('profile-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const updatedData = {
-          height: document.getElementById('height').value,
-          weight: document.getElementById('weight').value,
-          targetBMI: document.getElementById('targetBMI').value,
-          location: document.getElementById('location').value,
-          goals: document.getElementById('goals').value
-        };
-        
-        await updateUserData(user.uid, updatedData);
-        alert('Profile updated successfully!');
-      });
-    });
-
-    function populateForm(userData) {
-      document.getElementById('height').value = userData.height || '';
-      document.getElementById('weight').value = userData.weight || '';
-      document.getElementById('targetBMI').value = userData.targetBMI || '';
-      document.getElementById('location').value = userData.location || '';
-      document.getElementById('goals').value = userData.goals || '';
-    }
-  </script>
+  <script type="module" src="./js/profile.js"></script>
 </body>
 </html>

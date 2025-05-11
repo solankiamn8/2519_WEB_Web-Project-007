@@ -1,12 +1,10 @@
-import { getFirestore, doc, setDoc, getDoc, updateDoc} from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
-  signOut, 
-  GoogleAuthProvider,
-  signInWithPopup
+  signOut 
 } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -25,32 +23,50 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Auth functions
+// Auth functions with error handling and localStorage updates
 const signUp = async (email, password, userData) => {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  const user = userCredential.user;
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
 
-  // Save additional user data to Firestore
-  await setDoc(doc(db, 'users/' + user.uid), {
-    email: email,
-    ...userData
-  });
+    // Save additional user data to Firestore
+    await setDoc(doc(db, 'users/' + user.uid), {
+      email: email,
+      ...userData
+    });
 
-  return userCredential;
+    // Store userId in localStorage
+    localStorage.setItem('userId', user.uid);
+
+    return userCredential;
+  } catch (error) {
+    console.error("Error signing up: ", error);
+    throw new Error(error.message); // Or handle the error accordingly
+  }
 };
 
-const login = async(email, password) => {
-  return await signInWithEmailAndPassword(auth, email, password);
+const login = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    
+    // Store userId in localStorage
+    localStorage.setItem('userId', userCredential.user.uid);
+
+    return userCredential;
+  } catch (error) {
+    console.error("Error logging in: ", error);
+    throw new Error(error.message); // Or handle the error accordingly
+  }
 };
 
-const googleLogin = () => {
-  const provider = new GoogleAuthProvider();
-  return signInWithPopup(auth, provider);
-};
-
-const logOut = () => {
-  localStorage.removeItem('userId')
-  return signOut(auth);
+const logOut = async () => {
+  try {
+    localStorage.removeItem('userId');
+    await signOut(auth);
+  } catch (error) {
+    console.error("Error logging out: ", error);
+    throw new Error(error.message); // Or handle the error accordingly
+  }
 };
 
 const getCurrentUser = () => {
@@ -58,12 +74,22 @@ const getCurrentUser = () => {
 };
 
 const getUserData = async (userId) => {
-  const userDoc = await getDoc(doc(db, 'users', userId));
-  return userDoc.exists() ? userDoc.data() : null;
+  try {
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    return userDoc.exists() ? userDoc.data() : null;
+  } catch (error) {
+    console.error("Error fetching user data: ", error);
+    throw new Error(error.message); // Or handle the error accordingly
+  }
 };
 
 const updateUserData = async (userId, data) => {
-  await updateDoc(doc(db, 'users/' + userId), data);
+  try {
+    await updateDoc(doc(db, 'users/' + userId), data);
+  } catch (error) {
+    console.error("Error updating user data: ", error);
+    throw new Error(error.message); // Or handle the error accordingly
+  }
 };
 
 // Export functions
@@ -72,7 +98,6 @@ export {
   db,
   signUp, 
   login, 
-  googleLogin,
   logOut, 
   getCurrentUser,
   getUserData,
